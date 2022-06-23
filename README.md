@@ -233,26 +233,26 @@ scraped_values <- colnames(c("PID","Value","Change"))
 print(paste("items to scrape: ",nrow(addresses)))
 
 for(i in 1:nrow(addresses)){
-  
   cur_URL <- (paste(viewpoint_base_url, addresses[i,4], sep =""))
   print(paste("scraping item :", i, " ", cur_URL));
 
-  cur_page <- read_html(cur_URL)
+  if(!http_error(cur_URL)){
+    cur_page <- read_html(cur_URL)
+    cur_page <- cur_page %>%
+      html_nodes("span") %>% #Subset the <span> nodes
+      html_text() #Get the HTML text contents within the nodes
+    
+    cur_scrape <- gsub('[\t\n]', '', cur_page[13])
+    cur_scrape <- gsub('[Assesment,&,Tax]', '', cur_scrape)
+    cur_scrape <- gsub('.*? ', '', cur_scrape)
+    cur_scrape <- strsplit(cur_scrape, '\\$', fixed=t)
+    cur_value <- cur_scrape[[1]][2]
+    cur_change <- cur_scrape[[1]][3]
   
-  cur_page <- cur_page %>%
-    html_nodes("span") %>% #Subset the <span> nodes
-    html_text() #Get the HTML text contents within the nodes
+    scraped_values <- rbind(c(addresses[i,4], cur_value, cur_change), scraped_values);
   
-  cur_scrape <- gsub('[\t\n]', '', cur_page[13])
-  cur_scrape <- gsub('[Assesment,&,Tax]', '', cur_scrape)
-  cur_scrape <- gsub('.*? ', '', cur_scrape)
-  cur_scrape <- strsplit(cur_scrape, '\\$', fixed=t)
-  cur_value <- cur_scrape[[1]][2]
-  cur_change <- cur_scrape[[1]][3]
-
-  scraped_values <- rbind(c(addresses[i,4], cur_value, cur_change), scraped_values);
-
-  Sys.sleep(.05)
+    Sys.sleep(.05)
+  }
 }
 
 scraped_values
