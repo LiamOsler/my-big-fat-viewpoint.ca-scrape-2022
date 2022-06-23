@@ -1,5 +1,6 @@
 
 <h1> Web Scraping Viewpoint.ca Data with R </h1>
+[Download the R Notebook here](https://github.com/LiamOsler/my-big-fat-viewpoint.ca-scrape-2022/blob/main/notebook.rmd)
 
 <h2>About Viewpoint.ca:</h2>
 
