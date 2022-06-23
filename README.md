@@ -30,11 +30,14 @@ viewpoint_base_url <- "https://www.viewpoint.ca/property/"
 ```
 
 <p>The column that we are going to use to correlate with the Viewpoint Data are the PIDs, we will get them from our addresses CSV file we read in earlier:</p>
+
 ```r
 #using [c("column_names_vector", "example_column")] will return a subset of columns:
 addresses[c("PID")]
 ```
+
 <p>Count the number of rows in the civic address file with the ```nrow()``` function:</p>
+
 ```r
 nrow(addresses)
 ```
@@ -51,11 +54,13 @@ nrow(addresses[c("PID")] %>% distinct())
 
 
 <p>Load the ```rvest``` library:</p>
+
 ```r
 library(rvest)
 ```
 
 <h2>Retrieving the HTML Contents of a Viewpoint.ca Page:</h2>
+
 ```r
 #The read_html function will retrieve the raw html content of the page:
 #We'll use the first PID, #00143396 as a test:
@@ -64,7 +69,8 @@ library(rvest)
 #Note: wrapping the call in ( ) brackets makes an assignment print the contents of the assigned variable to the console
 ```
 
-<p>By analyzing the tags used by the Viewpoint developers, we'll find that the assesed property value is contained within a ```span``` tag.
+<p>By analyzing the tags used by the Viewpoint developers, we'll find that the assesed property value is contained within a ```span``` tag. </p>
+  
 ```r
 test_page %>%
   html_nodes("span") %>% #Subset the <span> nodes
@@ -72,6 +78,7 @@ test_page %>%
 ```
 
 <p>We can assign this subset of the page to the existing variable, then subset just the tenth row of it to get the assessed property value:</p>
+
 ```r
 test_page <- test_page %>%
   html_nodes("span") %>% #Subset the <span> nodes
@@ -79,7 +86,7 @@ test_page <- test_page %>%
 ```
 <p>Our initial results aren't particularly useful in this form, fortunately we can easily subset the HTML text contents of the vector by the "line"- i.e. row, number.</p>
 
-<p>Retrieve just the row with the assessed property value using the 10th line:</p>
+<p>Retrieve just the row with the assessed property value using the 10th line as a test:</p>
 ```r
 #A single index in a vector's name followed by brackets will return that row: 
 test_page[10]
@@ -98,11 +105,7 @@ test_value
 test_page[13]
 ```
 
-```r
-test_change <- test_page[13]
 
-test_change
-```
 <p>We can use the base R function ```gsub``` to substitue the unneeded parts of the text and leave ourselves with just the percent change and the year range:</p>
 ```r
 gsub('[\t\n Historical Assesment]', '', test_change)
@@ -110,18 +113,18 @@ gsub('[\t\n Historical Assesment]', '', test_change)
 
 <h2>Using a Loop to Iterate Through All of the PIDs and Scrape Their Assessed Value:</h2>
 
-
 <p>Constructing a basic for loop:</p>
+
 ```r
 #Create a for loop with a variable called "i" as the index that iterates from 1 through to the number of rows in the address CSV file:
 for(i in 1:nrow(addresses)){
-  
 }
 ```
+
 <p>Obviously, the loop contents being empty, we will not see anything in the console, but the loop did run as many times as there are PIDs.</p>
 
-
 <p>Adding conditions to this for loop:</p>
+
 ```r
 #Create a variable outside the loop and increment it by 1 every time the loop iterates:
 counter <- 0
@@ -135,6 +138,7 @@ print(counter)
 <p>We could print a message every time the loop runs, but with this many iterations it would be very long. Insted we may be interested in some subset of the loop:</p>
 
 <p>Adding conditions to this for loop:</p>
+
 ```r
 #Use less than  a certain number as a condition to print only once the loop runs every 10000 times:
 for(i in 1:nrow(addresses)){
@@ -145,6 +149,7 @@ for(i in 1:nrow(addresses)){
 ```
 
 <p>From the end of the loop:</p>
+
 ```r
 #Use less than  a certain number as a condition to print only once the loop runs every 10000 times:
 for(i in 1:nrow(addresses)){
@@ -201,13 +206,14 @@ for(i in 1:nrow(addresses)){
 #Using is.na() to get the indexes of the NA, values, we can print only the locations where the value is not NA, ie the position we wrote to earlier.
 status_list[!is.na(status_list)]
 ```
-<h2>Back to business:</h2>
+
+<h2>Anyways, back to business:</h2>
 
 ```r
 addresses %>% mutate("PROP_VAL")
 ```
 
-<p>To test how Viewpoint reacts to being rapidly queried, I'll try just 10 requests to start with:<p>
+<p>To test how Viewpoint reacts to being rapidly queried, I'll try just 10 requests to start with:</p>
 ```r
 for(i in 1:10){
   cur_URL <- (paste(viewpoint_base_url, addresses[i,4], "/", sep =""))
