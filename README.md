@@ -26,7 +26,7 @@ Parsing failures are due to the read_csv function interpreting the TECH_MOD colu
 Lets look at an example viewpoint page,
 <a href = "https://www.viewpoint.ca/property/00599050/">"https://www.viewpoint.ca/property/00599050/"</a>
 
-Viewpoint URLS are formatted in a simple fashion, ```/property/#####/``` where ##### is the PID (Unique Property Identifier number of the lot parcel), as shown in the URL above.
+Viewpoint URLS are formatted in a simple fashion, ```/property/#####/``` where ##### is the PID, as shown in the URL above.
 
 ```r
 viewpoint_base_url <- "https://www.viewpoint.ca/property/"
