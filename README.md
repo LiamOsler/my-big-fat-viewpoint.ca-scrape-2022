@@ -55,14 +55,13 @@ addresses[c("PID")] %>% distinct()
 nrow(addresses[c("PID")] %>% distinct())
 ```
 
+<h2>Retrieving the HTML Contents of a Viewpoint.ca Page:</h2>
 
 Load the ```rvest``` library:
 
 ```r
 library(rvest)
 ```
-
-<h2>Retrieving the HTML Contents of a Viewpoint.ca Page:</h2>
 
 ```r
 #The read_html function will retrieve the raw html content of the page:
