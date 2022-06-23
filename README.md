@@ -5,14 +5,15 @@
 
 <p>The real estate listing website <a href = "viewpoint.ca">viewpoint.ca</a> has relatively complete and accurate records. The ability to query viewpoint.ca by PID (Property Identifier) makes it relatively simple to scrape for real property values/assesments in Nova Scotia.</p>
 
-<h2>Subject Property Locations:</h2>
-<p>Load the <code>tidyverse</code> and <code>dplyr</code> libraries:</p>
+<h2> Getting started </h2>
+<p>Load the ```tidyverse``` and ```dplyr``` libraries:</p>
+
 ```r
 library(dplyr)
 library(tidyverse)
 ```
 
-<p>Load the <code>Civic_Addresses.csv</code> file from the <a href="https://catalogue-hrm.opendata.arcgis.com/datasets/2bc8323870fe44eab50630404713be6a_0?geometry=-64.521%2C44.422%2C-61.936%2C45.104"> Halifax Open Data Portal</a> (multiple file type options including .shp are also available). Every property lot in Canada has a unique PID. Cadastral shapefiles that show the delineated boundaries of property lots are difficult to find though. Point shapefiles with the location of the civic address and it's associated PIDs are easy to locate:</p>
+<p>Load the ```Civic_Addresses.csv``` file from the <a href="https://catalogue-hrm.opendata.arcgis.com/datasets/2bc8323870fe44eab50630404713be6a_0?geometry=-64.521%2C44.422%2C-61.936%2C45.104"> Halifax Open Data Portal</a> (multiple file type options including .shp are also available). Every property lot in Canada has a unique PID. Cadastral shapefiles that show the delineated boundaries of property lots are difficult to find though. Point shapefiles with the location of the civic address and it's associated PIDs are easy to locate:</p>
 
 ```r
 addresses <- read_csv("Civic_Addresses.csv")
@@ -22,7 +23,7 @@ addresses <- read_csv("Civic_Addresses.csv")
 <p>Lets look at an example viewpoint page,
 <a href = "https://www.viewpoint.ca/property/00599050/">"https://www.viewpoint.ca/property/00599050/"</a>
 
-<p>Viewpoint URLS are formatted in a simple fashion, <code>/property/#####/</code> where ##### is the PID (Unique Property Identifier number of the lot parcel), as shown in the URL above.</p>
+<p>Viewpoint URLS are formatted in a simple fashion, ```/property/#####/``` where ##### is the PID (Unique Property Identifier number of the lot parcel), as shown in the URL above.</p>
 
 ```r
 viewpoint_base_url <- "https://www.viewpoint.ca/property/"
@@ -33,12 +34,12 @@ viewpoint_base_url <- "https://www.viewpoint.ca/property/"
 #using [c("column_names_vector", "example_column")] will return a subset of columns:
 addresses[c("PID")]
 ```
-<p>Count the number of rows in the civic address file with the <code>nrow()</code> function:</p>
+<p>Count the number of rows in the civic address file with the ```nrow()``` function:</p>
 ```r
 nrow(addresses)
 ```
 
-<p>Since there may be multiple structures with the same PID, we can consider using the <code>distinct()</code> function from <code>dplyr</code> together with the <code>%>%</code> syntax:</p>
+<p>Since there may be multiple structures with the same PID, we can consider using the ```distinct()``` function from ```dplyr``` together with the ```%>%``` syntax:</p>
 
 ```r
 addresses[c("PID")] %>% distinct()
@@ -49,7 +50,7 @@ nrow(addresses[c("PID")] %>% distinct())
 ```
 
 
-<p>Load the <code>rvest</code> library:</p>
+<p>Load the ```rvest``` library:</p>
 ```r
 library(rvest)
 ```
@@ -63,7 +64,7 @@ library(rvest)
 #Note: wrapping the call in ( ) brackets makes an assignment print the contents of the assigned variable to the console
 ```
 
-<p>By analyzing the tags used by the Viewpoint developers, we'll find that the assesed property value is contained within a <code>span</code> tag.
+<p>By analyzing the tags used by the Viewpoint developers, we'll find that the assesed property value is contained within a ```span``` tag.
 ```r
 test_page %>%
   html_nodes("span") %>% #Subset the <span> nodes
@@ -102,7 +103,7 @@ test_change <- test_page[13]
 
 test_change
 ```
-<p>We can use the base R function <code>gsub</code> to substitue the unneeded parts of the text and leave ourselves with just the percent change and the year range:</p>
+<p>We can use the base R function ```gsub``` to substitue the unneeded parts of the text and leave ourselves with just the percent change and the year range:</p>
 ```r
 gsub('[\t\n Historical Assesment]', '', test_change)
 ```
