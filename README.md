@@ -84,7 +84,7 @@ test_page <- test_page %>%
   html_nodes("span") %>% #Subset the <span> nodes
   html_text() #Get the HTML text contents within the nodes
 ```
-<p>Our initial results aren't particularly useful in this form, fortunately we can easily subset the HTML text contents of the vector by the "line"- i.e. row, number.</p>
+<p>Our initial results aren't particularly useful in this form, fortunately we can easily subset the HTML text contents of the vector by the "line"- i.e. row, number</p>
 
 <p>Retrieve just the row with the assessed property value using the 10th line as a test:</p>
 ```r
