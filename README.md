@@ -5,7 +5,7 @@
 
 <h2>About Viewpoint.ca:</h2>
 
-The real estate listing website <a href = "viewpoint.ca">viewpoint.ca</a> has relatively complete and accurate records. The ability to query viewpoint.ca by PID (Property Identifier) makes it relatively simple to scrape for real property values/assesments in Nova Scotia.
+The real estate listing website <a href = "viewpoint.ca">viewpoint.ca</a> has relatively complete and accurate records. The ability to query viewpoint.ca by PID (Premises Identification) number makes it relatively simple to scrape for real property values/assesments in Nova Scotia.
 
 <h2> Getting started </h2>
 
