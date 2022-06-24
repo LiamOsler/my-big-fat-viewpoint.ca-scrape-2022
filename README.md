@@ -1,5 +1,5 @@
 
-<h1> Web Scraping Viewpoint.ca Data with R </h1>
+<h1> Web Scraping viewpoint.ca Data with R and ```rvest```</h1>
 
 [Download the R Notebook here](https://github.com/LiamOsler/my-big-fat-viewpoint.ca-scrape-2022/blob/main/notebook.rmd)
 
