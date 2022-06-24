@@ -159,8 +159,6 @@ for(i in 1:nrow(addresses)){
     print(paste("Reached: ", i, sep = ""))
   }
 }
-```
-
 #Using is.na() to get the indexes of the NA, values, we can print only the locations where the value is not NA, ie the position we wrote to earlier.
 status_list[!is.na(status_list)]
 ```
