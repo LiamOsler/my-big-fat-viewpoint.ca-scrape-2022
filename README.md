@@ -161,55 +161,13 @@ for(i in 1:nrow(addresses)){
 }
 ```
 
-```r
-#Use modulo as a condition to print only once the loop runs every 10000 times:
-for(i in 1:nrow(addresses)){
-  if(i %% 10000 == 0){ 
-    print(paste("Reached: ", i, sep = ""))
-  }
-}
-```
-  
-```r
-#We can also combine all three together in the single loop:
-for(i in 1:nrow(addresses)){
-  if(i <= 10){ 
-    print(paste("Reached: ", i, sep = ""))
-  }
-  
-  if(i %% 10000 == 0){ 
-    print(paste("Reached: ", i, sep = ""))
-  }
-  
-  if(i >= nrow(addresses)-10){ 
-    print(paste("Reached: ", i, sep = ""))
-  }
-}
-```
-
-```r
-#We may also want to iteratively append the values to an position in a vector:
-status_list <- ""
-
-for(i in 1:nrow(addresses)){
-  if(i <= 10){ 
-    status_list[i] = paste("Reached: ", i, sep = "")
-  }
-  
-  if(i %% 10000 == 0){ 
-    status_list[i] = paste("Reached: ", i, sep = "")
-  }
-  
-  if(i >= nrow(addresses)-10){ 
-    status_list[i] = paste("Reached: ", i, sep = "")
-  }
-}
-
 #Using is.na() to get the indexes of the NA, values, we can print only the locations where the value is not NA, ie the position we wrote to earlier.
 status_list[!is.na(status_list)]
 ```
 
 <h2>Anyways, back to business:</h2>
+
+Adding a column for property values:
 
 ```r
 addresses %>% mutate("PROP_VAL")
@@ -231,28 +189,50 @@ scraped_values <- colnames(c("PID","Value","Change"))
 
 print(paste("items to scrape: ",nrow(addresses)))
 
+# traverse the whole data set:
 for(i in 1:nrow(addresses)){
+  # generate the currrent URL using the base url and the current item's PID
   cur_URL <- (paste(viewpoint_base_url, addresses[i,4], sep =""))
+  
+  # print out the index and url of the current item:
   print(paste("scraping item :", i, " ", cur_URL));
 
+  # check to make sure there are no HTTP errors when trying to retrieve the item:
   if(!http_error(cur_URL)){
+    # copy the current page:
     cur_page <- read_html(cur_URL)
     cur_page <- cur_page %>%
       html_nodes("span") %>% #Subset the <span> nodes
       html_text() #Get the HTML text contents within the nodes
     
+    # Here, you could save the contents of the HTML to a local file rather than memory, if you wished.
+    
+    # Scraping the property values and tax assessment:
+    
+    # Get the 13th node of the page and remove tabs and new line characters:
     cur_scrape <- gsub('[\t\n]', '', cur_page[13])
+    
+    # Remove the "Assessment & Tax" text
     cur_scrape <- gsub('[Assesment,&,Tax]', '', cur_scrape)
+    
+    # Remove leading whitespace:
     cur_scrape <- gsub('.*? ', '', cur_scrape)
+    
+    # Split the string with "$" as the delimiter
     cur_scrape <- strsplit(cur_scrape, '\\$', fixed=t)
+    
+    # Current value is the first item of the list, taxes the second:
     cur_value <- cur_scrape[[1]][2]
-    cur_change <- cur_scrape[[1]][3]
+    cur_taxes <- cur_scrape[[1]][3]
+    
+    # Bind these values to an array:
+    scraped_values <- rbind(c(addresses[i,4], cur_value, cur_taxes), scraped_values);
   
-    scraped_values <- rbind(c(addresses[i,4], cur_value, cur_change), scraped_values);
-  
+    # Wait a moment to reduce server load:
     Sys.sleep(.05)
   }
 }
 
+# Print the scraped values:
 scraped_values
 ```
